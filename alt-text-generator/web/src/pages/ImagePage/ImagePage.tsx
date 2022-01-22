@@ -37,7 +37,7 @@ const ImagePage = () => {
     const imageInfo = results.info
 
     const input = {
-      name: name,
+      name: name || imageInfo.original_filename,
       description: description,
       url: imageInfo.url
     }
@@ -75,7 +75,7 @@ const ImagePage = () => {
           borderRadius: '4px',
           height: '25px',
         }}
-        folder={'test1'}
+        folder={'alt_text_imgs'}
         onSuccess={uploadFn}
       />
       <div style={{ display: 'block' }}>
