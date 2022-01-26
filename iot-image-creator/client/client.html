@@ -2,11 +2,14 @@
 <html>
    <head>
        <link rel="stylesheet" href="./client.css">
+       <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
+       <script src="https://cdnjs.cloudflare.com/ajax/libs/html-to-image/1.9.0/html-to-image.js" integrity="sha512-8GQQGLSN+MYJfxnTNZm8HPIXz9TkAMeRcadyQO/oFsk+OAHOH7uTz5dAafi1ADICwul44a3JpV2vsolsjVeVGg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
        <title>Real World Visuals</title>
    </head>
    <body>
        <header>This visualization is coming directly from sensor data.</header>
        <main>
+           <canvas id="sensorVisual" width="500"></canvas>
            <button id='data-btn' type="button">Show the data image</button>
        </main>
        <script src="./client.js"></script>
