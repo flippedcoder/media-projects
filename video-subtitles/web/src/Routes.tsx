@@ -12,6 +12,7 @@ import { Router, Route } from '@redwoodjs/router'
 const Routes = () => {
   return (
     <Router>
+      <Route path="/video" page={VideoPage} name="video" />
       <Route notfound page={NotFoundPage} />
     </Router>
   )
