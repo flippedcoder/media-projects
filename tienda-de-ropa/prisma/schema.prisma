@@ -1,0 +1,17 @@
+generator client {
+    provider = "prisma-client-js"
+}
+
+datasource db {
+    provider = "postgresql"
+    url      = "postgres://flippedcoder:123qwe!!!@localhost:5432/tienda-de-ropa"
+}
+
+model Product {
+    id          String @id @default(uuid())
+    name        String
+    category    String
+    price       Float
+    image       String
+    description String
+}
