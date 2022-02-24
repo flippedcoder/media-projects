@@ -1,8 +1,8 @@
-import { PrismaClient, Prisma } from '@prisma/client'
+import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
-const userData: Prisma.ImageCreateInput[] = [
+const colorPaletteData = [
     {
       name: 'beach',
       src: 'https://res.cloudinary.com/milecia/image/upload/v1606580780/beach-boat.jpg',
