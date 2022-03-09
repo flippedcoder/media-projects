@@ -3,6 +3,12 @@ import Link from 'next/link'
 import styled from 'styled-components'
 import prisma from '../../../prisma'
 
+const Back = styled.div`
+    border: 1px solid #c4c4c4;
+    background-color: #abacab;
+    width: 150px;
+`
+
 function Product({ product }) {
     function addToCart() {
         let arr = []
@@ -56,11 +62,5 @@ export async function getServerSideProps(context) {
         },
     }
 }
-
-const Back = styled.div`
-    border: 1px solid #c4c4c4;
-    background-color: #abacab;
-    width: 150px;
-`
 
 export default Product
