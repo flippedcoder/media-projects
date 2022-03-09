@@ -41,7 +41,7 @@ export default function PaletteGenerator() {
     if (error) return <div>Failed to load images</div>
     if (!data) return <div>Loading...</div>
 
-    async function uploadVideoFn(results: CloudinaryResult) {
+    async function uploadImage(results: CloudinaryResult) {
         const url = results.info.url
         const img = document.createElement('img')
         img.crossOrigin = "Anonymous"
@@ -77,7 +77,7 @@ export default function PaletteGenerator() {
                 sources={['local', 'camera']}
                 cloudName={'milecia'}
                 uploadPreset={'cwt1qiwn'}
-                buttonText={'Add Video'}
+                buttonText={'Upload Image'}
                 style={{
                     color: 'white',
                     border: 'none',
@@ -87,10 +87,11 @@ export default function PaletteGenerator() {
                     height: '25px',
                 }}
                 folder={'subtitled_videos'}
-                onSuccess={uploadVideoFn}
+                onSuccess={uploadImage}
             />
             <button style={{ display: 'block' }} onClick={saveColorPalette}>Generate color palette</button>
-            {url != "" && palette != undefined &&
+            {
+                url != "" && palette != undefined &&
                 <div>
                     <h2>{name}</h2>
                     <Image src={url} alt={name} height={240} width={240} />
@@ -99,15 +100,16 @@ export default function PaletteGenerator() {
                     <ColorBlot hexCode={palette.colorLow}>{palette.colorLow}</ColorBlot>
                 </div>
             }
-            {data.map((image: Image) => (
-                <div key={image.name}>
-                    <h2>{image.name}</h2>
-                    <Image src={image.src} alt={image.name} height={240} width={240} />
-                    <ColorBlot hexCode={image.colorHigh}>{image.colorHigh}</ColorBlot>
-                    <ColorBlot hexCode={image.colorMid}>{image.colorMid}</ColorBlot>
-                    <ColorBlot hexCode={image.colorLow}>{image.colorLow}</ColorBlot>
-                </div>
-            ))
+            {
+                data.map((image: Image) => (
+                    <div key={image.name}>
+                        <h2>{image.name}</h2>
+                        <Image src={image.src} alt={image.name} height={240} width={240} />
+                        <ColorBlot hexCode={image.colorHigh}>{image.colorHigh}</ColorBlot>
+                        <ColorBlot hexCode={image.colorMid}>{image.colorMid}</ColorBlot>
+                        <ColorBlot hexCode={image.colorLow}>{image.colorLow}</ColorBlot>
+                    </div>
+                ))
             }
         </>
     )
