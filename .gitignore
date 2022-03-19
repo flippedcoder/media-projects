@@ -3,3 +3,4 @@ article.md
 */*/node_modules
 */images
 */.venv
+*/*/.venv
