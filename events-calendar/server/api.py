@@ -2,13 +2,18 @@ import json
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_cors import CORS
 
 app = Flask(__name__)
+
+CORS(app)
+
 app.config[
     "SQLALCHEMY_DATABASE_URI"
 ] = "postgresql://flippedcoder:123qwe!!!@localhost:5432/calendar"
 
 db = SQLAlchemy(app)
+
 migrate = Migrate(app, db)
 
 
@@ -33,6 +38,27 @@ class EventsModel(db.Model):
         return f"<Event {self.title}>"
 
 
+@app.route("/event", methods=["POST"])
+def create_event():
+    if request.is_json:
+        data = request.get_json()
+
+        new_event = EventsModel(
+            title=data["title"],
+            date=data["date"],
+            time=data["time"],
+            location=data["location"],
+            description=data["description"],
+        )
+
+        db.session.add(new_event)
+        db.session.commit()
+
+        return {"message": f"event {new_event.title} has been created successfully."}
+    else:
+        return {"error": "The request payload is not in JSON format"}
+
+
 @app.route("/events", methods=["GET"])
 def get_events():
     eventsData = EventsModel.query.all()
@@ -47,7 +73,7 @@ def get_events():
         }
         for event in eventsData
     ]
-    
+
     return {"events": json.dumps(events, default=str)}
 
 
@@ -68,38 +94,17 @@ def event(event_id):
         return {"message": "success", "event": json.dumps(response, default=str)}
     else:
         data = request.get_json()
-        
-        event.title = data['title']
-        event.date = data['date']
-        event.time = data['time']
-        event.location = data['location']
-        event.description = data['description']
-        
+
+        event.title = data["title"]
+        event.date = data["date"]
+        event.time = data["time"]
+        event.location = data["location"]
+        event.description = data["description"]
+
         db.session.add(event)
         db.session.commit()
-        
+
         return {"message": f"event {event.title} successfully updated"}
-
-
-@app.route("/event", methods=["POST"])
-def create_event():
-    if request.is_json:
-        data = request.get_json()
-
-        new_event = EventsModel(
-            title=data["title"],
-            date=data["date"],
-            time=data["time"],
-            location=data["location"],
-            description=data["description"],
-        )
-
-        db.session.add(new_event)
-        db.session.commit()
-
-        return {"message": f"event {new_event.title} has been created successfully."}
-    else:
-        return {"error": "The request payload is not in JSON format"}
 
 
 if __name__ == "__main__":
