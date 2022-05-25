@@ -1,0 +1,37 @@
+<html>
+  <head>
+    <script src="https://aframe.io/releases/1.0.3/aframe.min.js"></script>
+    <script src="https://unpkg.com/aframe-physics-system@1.4.0/dist/aframe-physics-system.min.js"></script>
+  </head>
+  <body>
+    <a-scene background="color: #7BFAFA" physics>
+      <!-- TODO: add background image, textures -->
+        <!-- box that drops in and bounces -->
+      <a-box position="-1 6 -3" rotation="0 45 0" color="#FFFF00" shadow dynamic-body></a-box>
+      <a-plane position="0 0 -5" rotation="-90 0 0" width="6" height="6" color="#000000" static-body></a-plane>
+
+
+      <!-- robot right leg -->
+      <a-box position="2 1.25 -5" height="2.5" width="0.75" depth="0.75" color="#bcc9b5" shadow></a-box>
+      <!-- robot left leg -->
+      <a-box position="0.25 1.25 -5" height="2.5" width="0.75" depth="0.75" color="#bcc9b5" shadow></a-box>
+      <!-- robot waist -->
+      <a-box position="1.15 2.5 -5" height="0.5" width="2.5" depth="0.75" color="#bcc9b5" shadow></a-box>
+      <!-- robot body -->
+      <a-box position="1 3.75 -5" height="3" width="1" depth="1" color="#bcc9b5" shadow></a-box>
+      <!-- robot head -->
+      <a-box position="1 5.75 -5" height="1.25" width="1.75" depth="1.25" color="#bcc9b5" shadow></a-box>
+      <!-- base of robot right arm -->
+      <a-cylinder position="2.25 4.25 -5" radius="0.35" height="2" color="#bcc9b5" segments-radial="6" rotation="0 0 90"></a-cylinder>
+      <!-- second part of robot right arm -->
+      <a-cylinder position="3.8 3.75 -5" radius="0.35" height="2" color="#bcc9b5" segments-radial="6" rotation="0 0 45"></a-cylinder>
+      <!-- base of robot left arm -->
+      <a-cylinder position="-0.25 4.25 -5" radius="0.35" height="2" color="#bcc9b5" segments-radial="6" rotation="0 0 90"></a-cylinder>
+      <!-- second part of robot left arm -->
+      <a-cylinder position="-1.8 5 -5" radius="0.35" height="2" color="#bcc9b5" segments-radial="6" rotation="0 0 45"></a-cylinder>
+
+      <!-- set the camera for the user -->
+      <a-camera position="0 3 0"></a-camera>
+    </a-scene>
+  </body>
+</html>
