@@ -4,3 +4,4 @@ article.md
 */images
 */.venv
 */*/.venv
+.env
