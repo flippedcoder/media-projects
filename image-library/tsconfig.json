@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "sourceMap": true,
+        "target": "es6",  
+        "module": "es6",
+        "outDir": "dist",
+        "moduleResolution": "node",
+        "experimentalDecorators": true
+    },
+    "include": [
+      "components/**/*"
+    ]
+}
