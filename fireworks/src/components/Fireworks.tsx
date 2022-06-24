@@ -1,3 +1,4 @@
+import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import anime from "animejs";
 import { useState, useRef, useEffect } from "react";
@@ -12,7 +13,7 @@ export interface CustomizationProps {
   rows: number[];
 }
 
-const Player = () => {
+const Fireworks = () => {
   const [customizations, setCustomizations] = useState<CustomizationProps>({
     color: "bf6d20",
     size: 450,
@@ -31,7 +32,7 @@ const Player = () => {
   useEffect(() => {
     // @ts-ignore
     animation.current = anime.timeline({
-      direction: "normal",
+      direction: "alternate",
       duration: customizations.duration,
       autoplay: false,
       easing: "easeInOutSine",
@@ -55,10 +56,6 @@ const Player = () => {
           grid: [customizations.rows.length, customizations.sparkAmount.length],
           from: "center",
           axis: "x",
-        }),
-        delay: anime.stagger(200, {
-          grid: [customizations.rows.length, customizations.sparkAmount.length],
-          from: "center",
         }),
         easing: "easeInOutQuad",
       },
@@ -89,10 +86,12 @@ const Player = () => {
             ))}
           </ul>
         ))}
-        <button onClick={handleClick}>Play</button>
+        <Button variant="contained" color="success" onClick={handleClick}>
+          Play
+        </Button>
       </div>
     </Container>
   );
 };
 
-export default Player;
+export default Fireworks;
