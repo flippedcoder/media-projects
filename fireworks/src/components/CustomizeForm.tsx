@@ -15,7 +15,7 @@ export default function CustomizeForm({
   function updateFireworks(e: any) {
     e.preventDefault();
 
-    const { color, size, duration, sparkAmount } = customizations;
+    const { color, size, duration, sparkAmount, rows } = customizations;
 
     const newValues = {
       color: e.currentTarget.color.value || color,
@@ -31,6 +31,10 @@ export default function CustomizeForm({
         e.currentTarget.sparkAmount.value !== ""
           ? Array.from(Array(Number(e.currentTarget.sparkAmount.value)))
           : sparkAmount,
+      rows:
+        e.currentTarget.rows.value !== ""
+          ? Array.from(Array(Number(e.currentTarget.rows.value)))
+          : rows,
     };
 
     setCustomizations(newValues);
@@ -50,6 +54,12 @@ export default function CustomizeForm({
             label="Number of sparks"
             variant="standard"
             name="sparkAmount"
+          />
+          <TextField
+            id="rows"
+            label="Number of firework rows"
+            variant="standard"
+            name="rows"
           />
           <TextField
             id="duration"
