@@ -2,20 +2,7 @@
   import { slide } from "svelte/transition";
   import { onMount } from "svelte";
 
-  let images = [
-    {
-      url: "https://res.cloudinary.com/milecia/image/upload/v1606580780/beach-boat.jpg",
-      description: "beach",
-    },
-    {
-      url: "https://res.cloudinary.com/milecia/image/upload/v1606580778/3dogs.jpg",
-      description: "dogs",
-    },
-    {
-      url: "https://res.cloudinary.com/milecia/image/upload/v1606580774/fish-vegetables.jpg",
-      description: "food",
-    },
-  ];
+  let images = [];
 
   onMount(async () => {
     const results = await fetch(
