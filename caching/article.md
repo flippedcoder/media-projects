@@ -6,7 +6,15 @@ In this post, we're going to cover several ways you can cache and load images in
 
 ## Suspense
 
+This became a part of the React framework with the React 18 release.
+
 ## useSWR
+
+This is a library that uses a React hook to handle caching and it's built on top of `Suspense`. To use this library, we need to run the following command in our project.
+
+```bash
+$ npm install swr
+```
 
 ## Service workers
 
