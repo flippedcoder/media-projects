@@ -1,54 +1,58 @@
-
-import type { NextApiRequest, NextApiResponse } from 'next'
-import { WebClient, LogLevel } from "@slack/web-api"
+import type { NextApiRequest, NextApiResponse } from "next";
+import { WebClient, LogLevel } from "@slack/web-api";
 
 const client = new WebClient(process.env.SLACK_TOKEN);
 
 type MessageData = {
-  channelName: string
-  imageName: string
-  imageUrl: string
-}
+  channelName: string;
+  imageName: string;
+  imageUrl: string;
+};
 
-export default function handler(
+export default async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<MessageData>
+  res: NextApiResponse
 ) {
-  const body = JSON.parse(req.body)
-  const message = publishMessage({
+  const body = req.body;
+
+  await publishMessage({
     ...body,
-    channelName: 'Milecia McGregor'
-  })
-  res.status(200)
+    channelName: "zzz_test",
+  });
+
+  res.send("image uploaded successfully");
+  res.status(200);
 }
 
 async function publishMessage(messageData: MessageData) {
-  const channelId = findConversation(messageData.channelName)
-
+  const channelId = await getChannelId(messageData.channelName);
   try {
-    const result = await client.chat.postMessage({
-      token: process.env.SLACK_TOKEN,
-      channel: channelId,
-      text: `The ${messageData.imageName} is ready at ${messageData.imageUrl}`
-    });
-  }
-  catch (error) {
+    if (channelId) {
+      await client.chat.postMessage({
+        token: process.env.SLACK_TOKEN,
+        channel: channelId,
+        text: `The ${messageData.imageName} image upload is ready at ${messageData.imageUrl}`,
+      });
+    }
+  } catch (error) {
     console.error(error);
   }
 }
 
-async function findConversation(name: string) {
+async function getChannelId(name: string) {
   try {
     const result = await client.conversations.list({
-      token: process.env.SLACK_TOKEN
+      token: process.env.SLACK_TOKEN,
     });
 
     if (result.channels) {
-      const channel = result.channels.find(channel => channel.name === name)
-      return channel?.id
+      const channel = result.channels.find((channel) => {
+        return channel.name?.includes(name);
+      });
+
+      return channel?.id;
     }
-  }
-  catch (error) {
+  } catch (error) {
     console.error(error);
   }
 }

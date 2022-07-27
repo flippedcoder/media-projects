@@ -1,51 +1,53 @@
-import type { NextPage } from 'next'
-import { WidgetLoader, Widget } from 'react-cloudinary-upload-widget'
-import styles from '../styles/Home.module.css'
-
-interface CloudinaryResult {
-  info: {
-    original_filename: string
-    url: string
-  }
-}
+import type { NextPage } from "next";
+import { useState } from "react";
+import styles from "../styles/Home.module.css";
 
 const Home: NextPage = () => {
-  const uploadFn = async (results: CloudinaryResult) => {
-    const imageInfo = results.info
+  const [uploadedImage, setUploadedImage] = useState<any>();
 
-    const data = {
-      name: imageInfo.original_filename,
-      url: imageInfo.url
-    }
+  const uploadFn = async (e: any) => {
+    e.preventDefault();
 
-    await fetch("/api/notification", {
-      body: JSON.stringify(data)
+    const dataUrl = uploadedImage;
+
+    const uploadApi = `https://api.cloudinary.com/v1_1/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload`;
+
+    const formData = new FormData();
+    formData.append("file", dataUrl);
+    formData.append(
+      "upload_preset",
+      process.env.CLOUDINARY_UPLOAD_PRESET || ""
+    );
+
+    await fetch(uploadApi, {
+      method: "POST",
+      body: formData,
+    }).then(async (res) => {
+      const values = await res.json();
+
+      const data = {
+        name: values.original_filename,
+        url: values.url,
+      };
+
+      await fetch("/api/notification", {
+        method: "POST",
+        body: JSON.stringify(data),
+      });
     });
-  }
+  };
 
   return (
     <div className={styles.container}>
       <main className={styles.main}>
-        <WidgetLoader />
-        <Widget
-          sources={['local', 'camera']}
-          cloudName={process.env.CLOUDINARY_CLOUD_NAME}
-          uploadPreset={process.env.CLOUDINARY_UPLOAD_PRESET}
-          buttonText={'Open'}
-          style={{
-            color: 'white',
-            border: 'none',
-            width: '120px',
-            backgroundColor: 'green',
-            borderRadius: '4px',
-            height: '25px',
-          }}
-          folder={'alt_text_imgs'}
-          onSuccess={uploadFn}
+        <input
+          type="file"
+          onChange={(e) => setUploadedImage(e.currentTarget.value)}
         />
+        <button onClick={uploadFn}>Upload picture</button>
       </main>
     </div>
-  )
-}
+  );
+};
 
-export default Home
+export default Home;
