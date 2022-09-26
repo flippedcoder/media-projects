@@ -1,0 +1,12 @@
+.home {
+	padding: 56px 20px;
+	min-height: 100%;
+	width: 100%;
+}
+
+.skeleton {
+	border: 1px solid grey;
+	margin-top: 12px;
+	height: 150px;
+	width: 150px;
+}
