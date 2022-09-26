@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Button, StyleSheet, Text, View } from "react-native";
+import { useEffect, useState } from "react";
+import { Button, Image, StyleSheet, Text, View } from "react-native";
 import {
   launchImageLibrary,
   MediaType,
@@ -7,33 +7,16 @@ import {
 } from "react-native-image-picker";
 import { RootTabScreenProps } from "../types";
 
-export default function TabOneScreen({
-  navigation,
-}: RootTabScreenProps<"TabOne">) {
-  const [image, setImage] = useState({});
+export default function TabOneScreen({}: RootTabScreenProps<"TabOne">) {
+  const [image, setImage] = useState<any>();
 
-  const uploadImage = async () => {
-    const dataUrl = "";
-
-    const uploadApi = `https://api.cloudinary.com/v1_1/milecia/image/upload`;
-
-    const formData = new FormData();
-    formData.append("file", dataUrl);
-    formData.append("upload_preset", "cwt1qiwn");
-
-    await fetch(uploadApi, {
-      method: "POST",
-      body: formData,
-    });
-  };
-
-  const pickImage = async () => {
+  const pickImage = () => {
     const options = {
       mediaType: "photo" as MediaType,
       quality: 1 as PhotoQuality,
     };
 
-    await launchImageLibrary(options, (res) => {
+    launchImageLibrary(options, (res) => {
       if (res.errorCode) return;
 
       if (res.assets) {
@@ -47,14 +30,33 @@ export default function TabOneScreen({
     });
   };
 
+  const uploadImage = async (image: any) => {
+    const dataUrl = image?.dataUri || "";
+
+    const uploadApi = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`;
+
+    const formData = new FormData();
+    formData.append("file", dataUrl);
+    formData.append("upload_preset", "cwt1qiwn");
+
+    await fetch(uploadApi, {
+      method: "POST",
+      body: formData,
+    });
+  };
+
+  useEffect(() => {
+    uploadImage(image);
+  }, [image]);
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Upload an image here</Text>
       <View style={styles.separator} />
-      {/* {image && (
+      {image && (
         // @ts-ignore
         <Image source="" style={{ width: 300, height: 300 }} />
-      )} */}
+      )}
       <Button title="Upload Photo" onPress={pickImage} />
     </View>
   );

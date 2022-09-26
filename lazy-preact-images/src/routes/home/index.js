@@ -1,41 +1,47 @@
-import { h, render } from 'preact';
+import { useState, useEffect } from 'preact/hooks';
 import style from './style.css';
 
 const Home = () => {
 	const [images, setImages] = useState([])
+	const [isFetching, setIsFetching] = useState(false);
 
 	async function fetchPhotos() {
-		const results = await fetch(
-      `https://api.cloudinary.com/v1_1/${process.env.CLOUDINARY_CLOUD_NAME}/resources/image`,
-      {
-        headers: {
-          Authorization: `Basic ${Buffer.from(
-            process.env.CLOUDINARY_API_KEY +
-              ":" +
-              process.env.CLOUDINARY_API_SECRET
-          ).toString("base64")}`,
-        },
-      }
-    ).then((r) => r.json());
-
-    const { resources } = results;
-
-    const allImgs = resources.map((resource) => ({
-      url: resource.secure_url,
-      title: resource.public_id,
-    }));
-
-		setImages(allImgs)
+		setTimeout(async () => {
+		await fetch("http://localhost:3006/images").then(async (data) => {
+        const imageData = (await data.json()).images;
+        setImages(imageData);
+      })}, 2000)
 	}
 
-	render() (
+	function handleScroll() {
+		if (
+			Math.ceil(window.innerHeight + document.documentElement.scrollTop) !== document.documentElement.offsetHeight ||
+			isFetching
+		) return;
+		setIsFetching(true);
+	}
+
+	useEffect(() => {
+		fetchPhotos();
+		window.addEventListener('scroll', handleScroll);
+	}, [])
+
+	if (images.length === 0) {
+		return (
+			<div class={ style.home }>
+				<h1>Almost there...</h1>
+				<div class={ style.skeleton }>Loading images...</div>
+			</div>
+		)
+	}
+
+	return (
 		<div class={style.home}>
-			<h1>Home</h1>
-			<p>This is the Home component.</p>
+			<h1>These are the images</h1>
 			{images.length !== 0 && images.map(image => (
 					<div>
 						<p>{image.title}</p>
-						<img src={image.url} alt={image.title} />
+						<img src={image.url} alt={image.title || "..."} height="150" width="150" />
 					</div>
 				))
 			}

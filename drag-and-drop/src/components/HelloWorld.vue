@@ -1,46 +1,43 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
+    <draggable
+      :list="images"
+      item-key="title"
+      @start="drag=true"
+      @end="drag=false"
+    >
+      <template #item="{element}">
+        <div>
+          <img :src="element.url" width="150" height="150" />
+        </div>
+      </template>
+    </draggable>
   </div>
 </template>
 
 <script>
-import { Buffer } from 'buffer';
+import draggable from 'vuedraggable'
 export default {
   name: 'HelloWorld',
   props: {
     msg: String
   },
+  components: {
+      draggable,
+  },
   data() {
     return {
+      drag: false,
       images: []
     }
   },
   methods: {
     async getImages() {
-      const results = await fetch(
-      `https://api.cloudinary.com/v1_1/milecia/resources/image`,
-      {
-        method: 'GET',
-        headers: {
-          Authorization: `Basic ${Buffer.from(
-            "655265275423931" +
-              ":" +
-              "_8Gz0JXpM1OpirsIRuaA4bWqDvI"
-          ).toString("base64")}`,
-        },
-        mode: 'no-cors'
-      }
-      ).then((r) => r.json());
-
-      const { resources } = results;
-
-      this.images = resources.map((resource) => ({
-        url: resource.secure_url,
-        description: resource.public_id,
-      }));
-
-      console.log(this.images)
+      await fetch("http://localhost:3004/images").then(async (data) => {
+        const imageData = (await data.json()).images;
+        this.images = imageData;
+      });
     }
   },
   mounted() {

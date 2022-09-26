@@ -1,48 +1,44 @@
-import { Suspense, useEffect, useState } from 'react';
-import useSWR, { SWRConfig } from 'swr'
-  
-const fetcher = (...args) => fetch(...args).then((res) => res.json())
+import { Suspense, useEffect } from "react";
+import useSWR from "swr";
+import { registerCache } from "./service-worker";
 
 function App() {
-  const [images, setImages] = useState([])
+  const baseURL = "http://localhost:3008";
 
-  const url = 'https://pokeapi.co/api/v2/pokemon/' + name
+  const fetcher = (url: string) =>
+    fetch(url).then(async (res) => await res.json());
 
-  const { data, error } = useSWR(url)
+  const { data, error } = useSWR(`${baseURL}/images`, fetcher);
 
-  if (error) return <h1>Something went wrong!</h1>
-  if (!data) return <h1>Loading...</h1>
+  if (error) return <h1>Something went wrong!</h1>;
+  if (!data) return <h1>Loading...</h1>;
 
-  useEffect(async () => {
-    const imageRes = await fetch(`${process.env.CLOUD_NAME}`, {
-      method: "POST"
-    })
-
-    setImages(await imageRes.json())
-
-  }, [])
+  useEffect(() => {
+    registerCache();
+  }, []);
 
   return (
     <div>
       <Suspense fallback={<p>Loading user images...</p>}>
-        <ImageLayout images={images} />
+        <ImageLayout images={data.images} />
       </Suspense>
-      <SWRConfig value={{ fetcher }}>
-        <ImageLayout images={images} />
-      </SWRConfig>
     </div>
   );
 }
 
-const ImageLayout = ({ images }: { images: { name: string, url: string }[]}) => (
+const ImageLayout = ({
+  images,
+}: {
+  images: { title: string; url: string }[];
+}) => (
   <div>
-    {images.map(image => (
+    {images.map((image) => (
       <>
-        <p>{image.name}</p>
-        <img src={image.url} alt={image.name} />
+        <p>{image.title}</p>
+        <img src={image.url} alt={image.title} height="150" width="150" />
       </>
     ))}
   </div>
-) 
+);
 
 export default App;
